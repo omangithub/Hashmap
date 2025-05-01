@@ -1,4 +1,5 @@
 import "./styles.css";
+import LinkedList from "./linked-list.js"
 
 // creat a  class with set(key, value), get(key), has(key), remove(key) ...
 
@@ -6,8 +7,14 @@ class HashMap {
     constructor(loadFactor=0.75, capacity=16) {
     this.loadFactor=loadFactor;
     this.capacity=capacity;
-    this.array=new Array(capacity);
+    this.buckets=new Array(capacity).fill(null);
     this.size=0;
+    }
+
+    errorBucket(index) {
+      if (index < 0 || index >= this.buckets.length) {
+        throw new Error("Trying to access index out of bounds");
+      }
     }
 
     hash(key) {
@@ -23,18 +30,64 @@ class HashMap {
 
     set(key, value) {
 
-      const index=this.hash(key)
-      console.log(index)
-      console.log(value)
-      if (!this.array[index]){
-      this.array[index]=[]
-      this.array[index].push([key, value])
-      this.size++
-      console.log(this.array)
-    } else {
-      this.array[index][0][1]=value;
+// to create an index within my hashmap I need remainder of the hashkey from capacity
 
-    }}
+      const index= this.hash(key) % this.capacity;
+      this.errorBucket(index);
+
+// check if the key already exists. If so write over the value, otherwise create
+
+    if (this.buckets[index]===null){
+      const list = new LinkedList();
+      this.buckets[index]=list;
+      this.buckets[index].append([key, value]);
+      this.size++;
+    } else {
+      let keyAlreadyExist = false
+      for (let i=0; i<this.buckets[index].size();i++) {
+        if (this.buckets[index].at(i).value[0]===key) {
+          this.buckets[index].at(i).value[1] = value;
+          keyAlreadyExist=true
+        }
+      }
+      if (keyAlreadyExist===false) {
+      this.buckets[index].append([key, value]);
+      this.size++;
+      }
+      }
+    }
+
+/*    } else if (this.buckets[index].contains(key)) {
+      console.log(this.buckets[index].find(key));
+    } else {
+      this.buckets[index].append([key, value]);
+      this.size++;
+    }*/
+
+    get (key) {
+      const index=this.hash(key) % this.capacity;
+      this.errorBucket(index);
+      let result=null;
+      this.buckets.forEach((el)=>{
+      if (el===this.buckets[index]) {
+          result = this.buckets[index][0][1];
+        }   
+      });
+      return result;
+    }
+
+    has (key) {
+      const index=this.hash(key) % this.capacity;
+      this.errorBucket(index);
+      let result=false;
+      this.buckets.forEach((el)=>{
+      if (el===this.buckets[index]) {
+          result = true;
+        }                  
+      });
+      return result;
+    }
+
 }
 
 let test = new HashMap();
@@ -50,7 +103,5 @@ test.set("ice cream", "white");
 test.set("jacket", "blue");
 test.set("kite", "pink");
 test.set("lion", "golden");
-
-test.has("appl");
 
 console.log(test)
