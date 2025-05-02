@@ -177,10 +177,21 @@ class HashMap {
     }
 
 
-/*    entries() {
-
+    entries() {
+      let result = []
+      this.buckets.forEach((el)=>{
+        if (el!==null) {
+          for (let i=0; i<el.size();i++) {
+            let thisPair = []
+            thisPair.push(el.at(i).value[0]);
+            thisPair.push(el.at(i).value[1]);
+            result.push(thisPair)            
+          }
+        }
+      })
+      return result
     }
-*/
+
 }
 
 let test = new HashMap();
@@ -197,4 +208,4 @@ test.set("jacket", "blue");
 test.set("kite", "pink");
 test.set("lion", "golden");
 
-console.log(test.length())
+console.log(test.entries())
