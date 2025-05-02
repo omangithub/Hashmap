@@ -65,16 +65,14 @@ class HashMap {
 
     resize () {
       let oldBuckets = this.buckets;
-      console.log(oldBuckets)
       this.capacity=this.capacity*2;
       this.buckets=new Array(this.capacity).fill(null);
-
+      this.size=0;
       // reposition all old buckets by finding their new hashmap
 
       for (let i of oldBuckets) {
         if(i!==null) {
           for (let j=0; j<i.size();j++) {
-            console.log(i.at(j))
             this.set(i.at(j).value[0], i.at(j).value[1]) 
             }
 
@@ -194,18 +192,4 @@ class HashMap {
 
 }
 
-let test = new HashMap();
-test.set("apple", "red");
-test.set("banana", "yellow");
-test.set("carrot", "orange");
-test.set("dog", "brown");
-test.set("elephant", "gray");
-test.set("frog", "green");
-test.set("grape", "purple");
-test.set("hat", "black");
-test.set("ice cream", "white");
-test.set("jacket", "blue");
-test.set("kite", "pink");
-test.set("lion", "golden");
-
-console.log(test.entries())
+export default HashMap
