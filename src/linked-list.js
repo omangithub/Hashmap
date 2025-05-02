@@ -28,10 +28,12 @@ class LinkedList {
             this.head=node1;
             this.tail=node1;
             this.length++;
+            node1.nextNode=null;
         }
         else {
             this.tail.nextNode=node1;
             this.tail=node1;
+            node1.nextNode=null;
             this.length++;
         }
     }
@@ -63,6 +65,9 @@ class LinkedList {
     }
 
     at(index) {
+        if (index < 0 || index >= this.length) {
+            return "Error! Invalid Index!";
+        }
         let nodeIndex = this.head
         for (let i=0;i<index;i++) {
             nodeIndex=nodeIndex.nextNode
@@ -128,8 +133,96 @@ class LinkedList {
         }
         resultingStatement+="null";
         return resultingStatement  
+        }
+    }
+
+    removeAt(index) {
+        if (index < 0 || index >= this.length) {
+            return "Error! Index must be within range of list!";
+        }
+        if (this.length===0) {
+            return
+        } else if (this.length===1) {
+        this.pop()
+            return
+        } 
+        
+        if (index===0) {
+            this.head=this.head.nextNode;
+            this.length--
+        } else {
+        
+            let nodeBeforeIndex = this.head
+            let nodeIndex = this.head
+
+            for (let i=0;i<index-1;i++) {
+                nodeBeforeIndex=nodeBeforeIndex.nextNode;
+                console.log(nodeBeforeIndex)
+            }
+            for (let i=0;i<index;i++) {
+                nodeIndex=nodeIndex.nextNode;
+                console.log(nodeIndex)
+            }
+        nodeBeforeIndex.nextNode=nodeIndex.nextNode;
+        this.length--
+        
+        }
+    }
+
+    insertAt(value, index) {
+        if (index < 0 || index >= this.length) {
+            return "Error! Index must be within range of list!";
+        }
+        let nodeBeforeIndex = this.head
+        let nodeIndex = this.head
+
+        if (this.length===0) {
+            const node1 = new node (value);
+            this.head=node1;
+            this.tail=node1;
+            this.length=1;
+        } else {
+            if (index===0) {
+                const node1 = new node (value);
+                this.head=node1;
+                this.length++;
+                node1.nextNode=nodeIndex
+            } else {
+
+            for (let i=0;i<index-1;i++) {
+                nodeBeforeIndex=nodeBeforeIndex.nextNode;
+            }
+
+            if (nodeIndex.nextNode===null) {
+                const node1 = new node (value)
+                nodeIndex.nextNode=node1;
+                node1.nextNode=null;
+                this.length++;
+                console.log("here")
+            } else {
+
+                for (let i=0;i<index;i++) {
+                nodeIndex=nodeIndex.nextNode;
+                }
+                console.log(nodeIndex)
+                const node1 = new node (value)
+                node1.nextNode=nodeIndex;
+                nodeBeforeIndex.nextNode=node1;
+                this.length++
+            }}
+            console.log(list)
+        }
     }
 }
-}
+
+const list = new LinkedList();
+
+list.append("dog");
+list.append("cat");
+list.append("parrot");
+list.append("hamster");
+list.append("snake");
+list.append("turtle");
+console.log(list)
 
 export default LinkedList;

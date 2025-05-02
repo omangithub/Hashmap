@@ -35,7 +35,7 @@ class HashMap {
       const index= this.hash(key) % this.capacity;
       this.errorBucket(index);
 
-// check if the key already exists. If so write over the value, otherwise create
+// check if the key already exists. If so write over the value, otherwise create a linkedlist
 
     if (this.buckets[index]===null){
       const list = new LinkedList();
@@ -55,24 +55,46 @@ class HashMap {
       this.size++;
       }
       }
+
+      // resize the hash table if there are too many items
+
+      if (this.size/this.capacity>this.loadFactor) {
+        this.resize();
+      }
     }
 
-/*    } else if (this.buckets[index].contains(key)) {
-      console.log(this.buckets[index].find(key));
-    } else {
-      this.buckets[index].append([key, value]);
-      this.size++;
-    }*/
+    resize () {
+      let oldBuckets = this.buckets;
+      console.log(oldBuckets)
+      this.capacity=this.capacity*2;
+      this.buckets=new Array(this.capacity).fill(null);
+
+      // reposition all old buckets by finding their new hashmap
+
+      for (let i of oldBuckets) {
+        if(i!==null) {
+          for (let j=0; j<i.size();j++) {
+            console.log(i.at(j))
+            this.set(i.at(j).value[0], i.at(j).value[1]) 
+            }
+
+        }
+
+      }
+    }
 
     get (key) {
       const index=this.hash(key) % this.capacity;
       this.errorBucket(index);
       let result=null;
       this.buckets.forEach((el)=>{
-      if (el===this.buckets[index]) {
-          result = this.buckets[index][0][1];
+      if (el!==null) {
+        for (let i=0; i<this.buckets[index].size();i++) {
+          if (el.at(i).value[0]===key) {
+            result = el.at(i).value[1]
+          }
         }   
-      });
+      }});
       return result;
     }
 
@@ -81,13 +103,40 @@ class HashMap {
       this.errorBucket(index);
       let result=false;
       this.buckets.forEach((el)=>{
-      if (el===this.buckets[index]) {
-          result = true;
-        }                  
-      });
+      if (el!==null) {
+        for (let i=0; i<this.buckets[index].size();i++) {
+          if (el.at(i).value[0]===key) {
+            result = true;
+          }
+        }   
+      }});
       return result;
     }
 
+    remove (key) {
+      const index=this.hash(key) % this.capacity;
+      this.errorBucket(index);
+      let result=false;
+      let indexToRemove = null;
+      console.log(this.buckets);
+      this.buckets.forEach((el)=>{
+      if (el!==null) {
+        for (let i=0; i<el.size();i++) {
+          if (el.at(i).value[0]===key) {
+            if(el.size()===1){
+            this.buckets[index]=null
+            result=true;
+            }else {
+            el.removeAt(i)
+            result=true;
+            }   
+        }
+
+    }}});            
+      return result
+    }
+
+    
 }
 
 let test = new HashMap();
@@ -103,5 +152,3 @@ test.set("ice cream", "white");
 test.set("jacket", "blue");
 test.set("kite", "pink");
 test.set("lion", "golden");
-
-console.log(test)
