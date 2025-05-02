@@ -117,7 +117,6 @@ class HashMap {
       const index=this.hash(key) % this.capacity;
       this.errorBucket(index);
       let result=false;
-      let indexToRemove = null;
       console.log(this.buckets);
       this.buckets.forEach((el)=>{
       if (el!==null) {
@@ -136,7 +135,52 @@ class HashMap {
       return result
     }
 
-    
+    length() {
+      let totalSize=0;
+      this.buckets.forEach((el)=>{
+        if (el!==null) {
+        totalSize+=el.size()
+        }
+      })
+      return totalSize
+    }
+
+    clear() {
+      this.capacity=16;
+      this.buckets.fill(null);
+      this.size=0;
+    }
+
+    keys() {
+      let result = []
+      this.buckets.forEach((el)=>{
+        if (el!==null) {
+          for (let i=0; i<el.size();i++) {
+            result.push(el.at(i).value[0])
+          }
+        }
+      })
+      return result
+    }
+
+
+    values() {
+      let result = []
+      this.buckets.forEach((el)=>{
+        if (el!==null) {
+          for (let i=0; i<el.size();i++) {
+            result.push(el.at(i).value[1])
+          }
+        }
+      })
+      return result
+    }
+
+
+/*    entries() {
+
+    }
+*/
 }
 
 let test = new HashMap();
@@ -152,3 +196,5 @@ test.set("ice cream", "white");
 test.set("jacket", "blue");
 test.set("kite", "pink");
 test.set("lion", "golden");
+
+console.log(test.length())
